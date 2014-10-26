@@ -1,6 +1,6 @@
-# Redxml::Protocol
+# RedXML::Protocol
 
-TODO: Write a gem description
+[![Build Status](https://travis-ci.org/theodik/redxml-protocol.svg)](https://travis-ci.org/theodik/redxml-protocol)
 
 ## Installation
 
