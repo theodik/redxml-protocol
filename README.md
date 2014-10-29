@@ -1,6 +1,6 @@
 # RedXML::Protocol
 
-[![Build Status](https://travis-ci.org/theodik/redxml-protocol.svg)](https://travis-ci.org/theodik/redxml-protocol)
+[![Build Status](https://travis-ci.org/theodik/redxml-protocol.svg)](https://travis-ci.org/theodik/redxml-protocol) [![Code Climate](https://codeclimate.com/repos/5450c9ade30ba0754401569e/badges/35d222ccbf59ddfd79e7/gpa.svg)](https://codeclimate.com/repos/5450c9ade30ba0754401569e/feed) [![Coverage Status](https://coveralls.io/repos/theodik/redxml-protocol/badge.png)](https://coveralls.io/r/theodik/redxml-protocol)
 
 ## Installation
 

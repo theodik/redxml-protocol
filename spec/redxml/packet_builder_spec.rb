@@ -147,5 +147,4 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
       expect(described_class.parse(nil)).to be_nil
     end
   end
-
 end
