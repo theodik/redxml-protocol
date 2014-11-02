@@ -1,13 +1,27 @@
 module RedXML
   module Protocol
     class PacketBuilder
-      def self.parse(data)
+      def self.parse(data, length = nil, protocol = RedXML::Protocol.version)
         return if data.nil? || data.empty?
+        length ||= data.bytes.length
+
+        begin
+        # Read method and param length
         method_tag, param_length = data.unpack('a1N')
+
+        # Reread with param length, discard tag and length
         _, _, param = data.unpack("a1Nxa#{param_length}x")
+        rescue ArgumentError => e
+          raise RedXML::Protocol::MalformedDataError,
+            "Could not parse data: #{e}"
+        end
+
+        # find method
         method, _ = METHOD_TAGS.rassoc(method_tag)
-        length = data.bytes.length
-        protocol = RedXML::Protocol.version
+        if method.nil?
+          fail RedXML::Protocol::UnsupportedMethodError,
+            "Method '#{method_tag}' is not supported"
+        end
 
         RedXML::Protocol::Packet.new(data, length, protocol,
                                    method, method_tag,
