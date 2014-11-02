@@ -36,11 +36,13 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
   end
 
   describe '::hello' do
-    subject { described_class.hello }
+    let(:message) { "RedXML-Protocol-#{RedXML::Protocol::VERSION}" }
+    subject { described_class.hello(message) }
 
     it 'creates packet' do
       # LEN, VER, (Name, param_length), \0, (param), \0
-      packet = [7, 1, 'H', 0].pack("NNa1Nxx")
+      packet = [5 + 1 + message.length + 1, 1, 'H', message.length, message]
+        .pack("NNa1Nxa#{message.length}x")
       expect(subject.data).to eq packet
     end
   end

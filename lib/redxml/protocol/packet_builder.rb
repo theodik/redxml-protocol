@@ -32,8 +32,8 @@ module RedXML
         new.method(:ping)
       end
 
-      def self.hello
-        new.method(:hello)
+      def self.hello(message)
+        new.method(:hello).param(message)
       end
 
       def self.quit
