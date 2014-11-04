@@ -5,10 +5,10 @@ RSpec.describe RedXML::Protocol do
     it 'parses data' do
       length = 11
       protocol = 1
-      method_tag = 'E'
+      command_tag = 'E'
       param_length = 4
       param = 'test'
-      data = [length, protocol, method_tag, param_length, param].pack("NNa1Nxa#{param_length}x")
+      data = [length, protocol, command_tag, param_length, param].pack("NNa1Nxa#{param_length}x")
       client = StringIO.new(data)
 
       packet = described_class.read_packet client
@@ -16,7 +16,7 @@ RSpec.describe RedXML::Protocol do
       expect(packet).to be_a RedXML::Protocol::Packet
       expect(packet.length).to eq length
       expect(packet.protocol).to eq protocol
-      expect(packet.method_tag).to eq method_tag
+      expect(packet.command_tag).to eq command_tag
       expect(packet.param).to eq param
       expect(packet.param_length).to eq param_length
     end
@@ -38,17 +38,17 @@ RSpec.describe RedXML::Protocol do
       }.to raise_error(RedXML::Protocol::MalformedDataError)
     end
 
-    it 'throw error on unsupported method' do
+    it 'throw error on unsupported command' do
       length = 7
       version = 1
-      method_tag = 'X'
+      command_tag = 'X'
       param_length = 0
-      data = [length, version, method_tag, param_length].pack("NNa1Nxx")
+      data = [length, version, command_tag, param_length].pack("NNa1Nxx")
       client = StringIO.new(data)
 
       expect {
         described_class.read_packet client
-      }.to raise_error(RedXML::Protocol::UnsupportedMethodError)
+      }.to raise_error(RedXML::Protocol::UnsupportedCommandError)
     end
   end
 end

@@ -6,8 +6,8 @@ module RedXML
         length ||= data.bytes.length
 
         begin
-        # Read method and param length
-        method_tag, param_length = data.unpack('a1N')
+        # Read command and param length
+        command_tag, param_length = data.unpack('a1N')
 
         # Reread with param length, discard tag and length
         _, _, param = data.unpack("a1Nxa#{param_length}x")
@@ -16,57 +16,57 @@ module RedXML
             "Could not parse data: #{e}"
         end
 
-        # find method
-        method, _ = METHOD_TAGS.rassoc(method_tag)
-        if method.nil?
-          fail RedXML::Protocol::UnsupportedMethodError,
-            "Method '#{method_tag}' is not supported"
+        # find command
+        command, _ = COMMAND_TAGS.rassoc(command_tag)
+        if command.nil?
+          fail RedXML::Protocol::UnsupportedCommandError,
+            "Command '#{command_tag}' is not supported"
         end
 
         RedXML::Protocol::Packet.new(data, length, protocol,
-                                   method, method_tag,
+                                   command, command_tag,
                                    param_length, param)
       end
 
       def self.ping
-        new.method(:ping)
+        new.command(:ping)
       end
 
       def self.hello(message)
-        new.method(:hello).param(message)
+        new.command(:hello).param(message)
       end
 
       def self.quit
-        new.method(:quit)
+        new.command(:quit)
       end
 
       def self.execute(xquery)
-        new.method(:execute).param(xquery)
+        new.command(:execute).param(xquery)
       end
 
-      attr_reader :protocol, :method_tag, :param_length
+      attr_reader :protocol, :command_tag, :param_length
 
       def initialize
         @protocol   = RedXML::Protocol.version
-        @method     = nil
-        @method_tag = nil
+        @command     = nil
+        @command_tag = nil
         @param      = ''
         @param_length  = 0
       end
 
       def to_packet
-        RedXML::Protocol::Packet.new(data, length, protocol, method, method_tag, param_length, param)
+        RedXML::Protocol::Packet.new(data, length, protocol, command, command_tag, param_length, param)
       end
       alias_method :build, :to_packet
 
       # @params [Symbol]
-      def method(*args)
+      def command(*args)
         if args.empty?
-          @method
+          @command
         else
-          @method     = args.first.to_sym
-          @method_tag = METHOD_TAGS[@method]
-          fail ArgumentError, "Unsupported method #{@method}" unless @method_tag
+          @command     = args.first.to_sym
+          @command_tag = COMMAND_TAGS[@command]
+          fail ArgumentError, "Unsupported command #{@command}" unless @command_tag
           self
         end
       end
@@ -82,7 +82,7 @@ module RedXML
       end
 
       def length
-        (method_tag ? method_tag.bytes.length : 0) +
+        (command_tag ? command_tag.bytes.length : 0) +
           4 + # param_length - integer
           1 + # null byte
           param_length +
@@ -90,7 +90,7 @@ module RedXML
       end
 
       def data
-        [length, @protocol, @method_tag, @param_length, @param].pack("NNa1Nxa#{@param_length}x")
+        [length, @protocol, @command_tag, @param_length, @param].pack("NNa1Nxa#{@param_length}x")
       end
     end
   end

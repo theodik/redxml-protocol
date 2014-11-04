@@ -5,7 +5,7 @@ require 'redxml/protocol/packet_builder'
 
 module RedXML
   module Protocol
-    METHOD_TAGS = {
+    COMMAND_TAGS = {
       hello: 'H',
       ping: 'P',
       quit: 'Q',

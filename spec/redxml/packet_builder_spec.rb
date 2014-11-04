@@ -4,12 +4,12 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
   describe '::ping' do
     subject { described_class.ping }
 
-    it 'sets method to ping' do
-      expect(subject.method).to eq :ping
+    it 'sets command to ping' do
+      expect(subject.command).to eq :ping
     end
 
-    it 'sets method tag to P' do
-      expect(subject.method_tag).to eq 'P'
+    it 'sets command tag to P' do
+      expect(subject.command_tag).to eq 'P'
     end
 
     it 'sets param length to 0' do
@@ -21,7 +21,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
     end
 
     it 'sets length' do
-      expected_length =  1 # name of method - char
+      expected_length =  1 # name of command - char
       expected_length += 4 # length of param - integer
       expected_length += 1 # null byte - end of name
       expected_length += 1 # null byte - end of param
@@ -69,12 +69,12 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
     subject { described_class.execute(xquery) }
 
-    it 'sets method to execute' do
-      expect(subject.method).to eq :execute
+    it 'sets command to execute' do
+      expect(subject.command).to eq :execute
     end
 
-    it 'sets method tag to P' do
-      expect(subject.method_tag).to eq 'E'
+    it 'sets command tag to P' do
+      expect(subject.command_tag).to eq 'E'
     end
 
     it 'sets param length' do
@@ -86,7 +86,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
     end
 
     it 'sets length' do
-      expected_length =  1 # name of method - char
+      expected_length =  1 # name of command - char
       expected_length += 4 # length of param - integer
       expected_length += 1 # null byte - end of name
       expected_length += xquery_length
@@ -114,8 +114,8 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
       expect(packet.data).to eq builder.data
       expect(packet.length).to eq builder.length
       expect(packet.protocol).to eq builder.protocol
-      expect(packet.method).to eq builder.method
-      expect(packet.method_tag).to eq builder.method_tag
+      expect(packet.command).to eq builder.command
+      expect(packet.command_tag).to eq builder.command_tag
       expect(packet.param_length).to eq builder.param_length
       expect(packet.param).to eq builder.param
     end
@@ -137,7 +137,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
       # + 7 see comments on sets length
       expect(packet.length).to eq xquery_length + 7
-      expect(packet.method).to eq :execute
+      expect(packet.command).to eq :execute
       expect(packet.param).to eq xquery
     end
 

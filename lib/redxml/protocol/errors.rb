@@ -6,7 +6,7 @@ module RedXML
     class MalformedDataError < ProtocolError
     end
 
-    class UnsupportedMethodError < ProtocolError
+    class UnsupportedCommandError < ProtocolError
     end
   end
 end
