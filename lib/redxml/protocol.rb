@@ -6,10 +6,10 @@ require 'redxml/protocol/packet_builder'
 module RedXML
   module Protocol
     COMMAND_TAGS = {
-      hello: 'H',
-      ping: 'P',
-      quit: 'Q',
-      execute: 'E'
+      hello: 'h',
+      ping: 'p',
+      quit: 'q',
+      execute: 'e'
     }.freeze
 
     def self.read_packet(io)

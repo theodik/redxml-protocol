@@ -5,7 +5,7 @@ RSpec.describe RedXML::Protocol do
     it 'parses data' do
       length = 11
       protocol = 1
-      command_tag = 'E'
+      command_tag = 'e'
       param_length = 4
       param = 'test'
       data = [length, protocol, command_tag, param_length, param].pack("NNa1Nxa#{param_length}x")
@@ -41,7 +41,7 @@ RSpec.describe RedXML::Protocol do
     it 'throw error on unsupported command' do
       length = 7
       version = 1
-      command_tag = 'X'
+      command_tag = 'x'
       param_length = 0
       data = [length, version, command_tag, param_length].pack("NNa1Nxx")
       client = StringIO.new(data)

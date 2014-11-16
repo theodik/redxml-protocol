@@ -8,8 +8,8 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
       expect(subject.command).to eq :ping
     end
 
-    it 'sets command tag to P' do
-      expect(subject.command_tag).to eq 'P'
+    it 'sets command tag to p' do
+      expect(subject.command_tag).to eq 'p'
     end
 
     it 'sets param length to 0' do
@@ -30,7 +30,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
     it 'creates packet' do
       # LEN, VER, (Name, param_length), \0, (param), \0
-      packet = [7, 1, 'P', 0].pack("NNa1Nxx")
+      packet = [7, 1, 'p', 0].pack("NNa1Nxx")
       expect(subject.data).to eq packet
     end
   end
@@ -41,7 +41,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
     it 'creates packet' do
       # LEN, VER, (Name, param_length), \0, (param), \0
-      packet = [5 + 1 + message.length + 1, 1, 'H', message.length, message]
+      packet = [5 + 1 + message.length + 1, 1, 'h', message.length, message]
         .pack("NNa1Nxa#{message.length}x")
       expect(subject.data).to eq packet
     end
@@ -52,7 +52,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
     it 'creates packet' do
       # LEN, VER, (Name, param_length), \0, (param), \0
-      packet = [7, 1, 'Q', 0].pack("NNa1Nxx")
+      packet = [7, 1, 'q', 0].pack("NNa1Nxx")
       expect(subject.data).to eq packet
     end
   end
@@ -73,8 +73,8 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
       expect(subject.command).to eq :execute
     end
 
-    it 'sets command tag to P' do
-      expect(subject.command_tag).to eq 'E'
+    it 'sets command tag to e' do
+      expect(subject.command_tag).to eq 'e'
     end
 
     it 'sets param length' do
@@ -96,13 +96,14 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
     it 'creates packet' do
       # LEN, VER, (Name, param_length), \0, (param), \0
-      packet = [xquery_length+7, 1, 'E', xquery_length, xquery].pack("NNa1Nxa#{xquery_length}x")
+      packet = [xquery_length+7, 1, 'e', xquery_length, xquery].pack("NNa1Nxa#{xquery_length}x")
       expect(subject.data).to eq packet
     end
   end
 
   describe '#to_packet' do
     it 'returns packet' do
+      subject = described_class.execute('test xquery')
       expect(subject.to_packet).to be_a RedXML::Protocol::Packet
     end
 
@@ -132,7 +133,7 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
     let(:xquery_length) { xquery.bytes.length }
 
     it 'parses data' do
-      data = ['E', xquery_length, xquery].pack("a1Nxa#{xquery_length}x")
+      data = ['e', xquery_length, xquery].pack("a1Nxa#{xquery_length}x")
       packet = described_class.parse(data)
 
       # + 7 see comments on sets length
@@ -147,6 +148,32 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
 
     it 'return nil on nil data' do
       expect(described_class.parse(nil)).to be_nil
+    end
+  end
+
+  describe '#error' do
+    it 'sets message' do
+      subject.command(:execute).error('error message')
+      expect(subject.error?).to be true
+      expect(subject.command_tag).to eq 'E'
+      expect(subject.param).to eq 'error message'
+    end
+
+    it 'sets upcase command tag' do
+      subject.error('error message').command(:execute)
+      expect(subject.command_tag).to eq 'E'
+      expect(subject.error?).to be true
+      expect(subject.param).to eq 'error message'
+    end
+  end
+
+  describe '#error!' do
+    subject { described_class.new.error! }
+
+    it 'sets upcase command tag' do
+      subject.command(:execute)
+      expect(subject.command_tag).to eq 'E'
+      expect(subject.error?).to be true
     end
   end
 end
