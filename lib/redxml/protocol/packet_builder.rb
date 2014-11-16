@@ -20,7 +20,7 @@ module RedXML
         error = command_tag == command_tag.upcase
         command, _ = COMMAND_TAGS.rassoc(command_tag.downcase)
         fail RedXML::Protocol::UnsupportedCommandError,
-          "Command '#{command_tag}' is not supported" unless command
+          "Unknown command '#{command_tag}'" unless command
 
         RedXML::Protocol::Packet.new(data, length, protocol,
                                      command, command_tag,
