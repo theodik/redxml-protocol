@@ -17,7 +17,8 @@ module RedXML
         end
 
         # find command
-        command, _ = COMMAND_TAGS.rassoc(command_tag)
+        error = command_tag == command_tag.upcase
+        command, _ = COMMAND_TAGS.rassoc(command_tag.downcase)
         fail RedXML::Protocol::UnsupportedCommandError,
           "Command '#{command_tag}' is not supported" unless command
 

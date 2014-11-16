@@ -140,6 +140,20 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
       expect(packet.length).to eq xquery_length + 7
       expect(packet.command).to eq :execute
       expect(packet.param).to eq xquery
+      expect(packet.error?).to be false
+    end
+
+    it 'parses error data' do
+      error_message = 'error message'
+      error_length  = error_message.bytes.length
+      data = ['E', error_length, error_message].pack("a1Nxa#{error_length}x")
+      packet = described_class.parse(data)
+
+      # + 7 see comments on sets length
+      expect(packet.length).to eq error_length + 7
+      expect(packet.command).to eq :execute
+      expect(packet.error?).to be true
+      expect(packet.param).to eq error_message
     end
 
     it 'return nil on empty data' do
