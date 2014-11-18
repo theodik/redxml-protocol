@@ -9,7 +9,9 @@ module RedXML
       hello: 'h',
       ping: 'p',
       quit: 'q',
-      execute: 'e'
+      execute: 'e',
+      load_document: 'l',
+      save_document: 's'
     }.freeze
 
     def self.read_packet(io)
