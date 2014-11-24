@@ -39,6 +39,18 @@ module RedXML
         new.command(:quit)
       end
 
+      def self.begin
+        new.command(:begin)
+      end
+
+      def self.commit
+        new.command(:commit)
+      end
+
+      def self.rollback
+        new.command(:rollback)
+      end
+
       def self.execute(xquery)
         new.command(:execute).param(xquery)
       end

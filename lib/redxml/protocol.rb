@@ -11,7 +11,10 @@ module RedXML
       quit: 'q',
       execute: 'e',
       load_document: 'l',
-      save_document: 's'
+      save_document: 's',
+      begin: 'b',
+      commit: 'c',
+      rollback: 'r'
     }.freeze
 
     def self.read_packet(io)

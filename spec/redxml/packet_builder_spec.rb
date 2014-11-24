@@ -57,6 +57,36 @@ RSpec.describe RedXML::Protocol::PacketBuilder do
     end
   end
 
+  describe '::begin' do
+    subject { described_class.begin }
+
+    it 'creates packet' do
+      # LEN, VER, (Name, param_length), \0, (param), \0
+      packet = [7, 1, 'b', 0].pack("NNa1Nxx")
+      expect(subject.data).to eq packet
+    end
+  end
+
+  describe '::commit' do
+    subject { described_class.commit }
+
+    it 'creates packet' do
+      # LEN, VER, (Name, param_length), \0, (param), \0
+      packet = [7, 1, 'c', 0].pack("NNa1Nxx")
+      expect(subject.data).to eq packet
+    end
+  end
+
+  describe '::rollback' do
+    subject { described_class.rollback }
+
+    it 'creates packet' do
+      # LEN, VER, (Name, param_length), \0, (param), \0
+      packet = [7, 1, 'r', 0].pack("NNa1Nxx")
+      expect(subject.data).to eq packet
+    end
+  end
+
   describe '::execute' do
     let(:xquery) do
       <<-EOF.gsub!(/^\s+/, '')
